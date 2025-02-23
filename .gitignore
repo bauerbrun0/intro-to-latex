@@ -1,0 +1,10 @@
+old
+_minted*
+*.aux
+*.log
+*.pyg
+*.gz
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
