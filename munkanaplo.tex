@@ -1,6 +1,9 @@
 \documentclass[12pt,a4paper]{article}
+
+% Hungarian language
 \PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
 \usepackage[magyar]{babel}
+
 \usepackage{geometry}
 \usepackage{titlesec}
 \usepackage{minted}
@@ -32,9 +35,6 @@
 
 % Chapter formatting (no chapter numbering)
 \titleformat{\section}{\Large\bfseries}{}{0pt}{}{}
-
-\renewcommand{\contentsname}{Tartalomjegyzék}
-\renewcommand{\figurename}{Ábra}
 
 \newcommand{\inlts}[1]{\mintinline[breaklines, breakanywhere]{typescript}{#1}}
 \newcommand{\inltxt}[1]{\mintinline[breaklines, breakanywhere]{text}{#1}}
@@ -129,7 +129,9 @@ be konfiguráltam. A RAID1 miatt ugyan lassabb lesz az írás a merevlemezre, va
 mindössze 500GB lesz elérhető, azonban a tükrözés miatt nagyobb lesz a hibatűrés.
 
 \subsubsection*{Tervezés megkezése}
-Ezek után a projekt megkezdéséhez szükséges, kezdetleges terveket készítettem el. (Ábra \ref{fig:login_diagram}, \ref{fig:further_requests_diagram})\\
+Ezek után a projekt megkezdéséhez szükséges, kezdetleges terveket készítettem el.
+(Lásd \aref{fig:login_diagram}. és \aref{fig:further_requests_diagram}.~ábrákat)\\
+
 \begin{figure}[ht]
   \centering
   \includegraphics[width = 0.8\textwidth]{images/login_diagram.png}
@@ -161,7 +163,7 @@ a nyelvi beállításokat.\\
 
 A felhasználói élmény növelése érdekében implementáltam a világos/sötét mód támogatást, így a
 felhasználók váltogathatnak a témák között. Végül létrehoztam az alkalmazás alapvető felépítését:
-tartalmaz egy fejlécet, egy fő tartalmi részt (body), és egy láblécet. (Ábra \ref{fig:dark_light_modes})\\
+tartalmaz egy fejlécet, egy fő tartalmi részt (body), és egy láblécet. (\ref{fig:dark_light_modes}.~ábra)\\
 
 \begin{figure}[ht]
     \centering
@@ -401,7 +403,8 @@ src/lib/services/ActiveDirectoryService.test.ts (20)
 
 \subsection{Header komponens, Login oldal (frontend) (09.13.)}
 
-A Header komponenst implementáltam először (Ábra \ref{fig:header_component}). Sikerült teljesen reszponzívra megírni (Ábra \ref{fig:header_component_mobile}). Tartalmaz
+A Header komponenst implementáltam először (\ref{fig:header_component}.~ábra). Sikerült teljesen
+reszponzívra megírni (\ref{fig:header_component_mobile}.~ábra). Tartalmaz
 két – egyelőre placeholder – menüsort, melyekre kattintva egy-egy ”dropdown” jelenik meg, a jobb
 sarokban egy ”profil gombot”, melyre kattintva szintén egy dropdown jelenik meg, ahol többek között
 ki lehet választani a nyelvet (magyar, angol), illetve változtatni lehet a témán (sötét/világos). Ezen
@@ -437,7 +440,7 @@ kattintva egy oldalsó menüsor (”drawer”) jelenik meg a placeholder menüpo
 \end{figure}
 
 \subsubsection*{Login oldal (frontend)}
-Ezt követően a bejelentkezési oldal frontend részét csináltam meg (Ábra \ref{fig:login_page}).
+Ezt követően a bejelentkezési oldal frontend részét csináltam meg (\ref{fig:login_page}.~ábra).
 A bejelentkezés gomb megnyomásával a böngésző egy \inltxt{POST} kérést küld a szervernek.
 Amennyiben sikeres a bejelentkezés, a szerver átirányít a kezdőoldalra, ahol egy
 felugró, ”toast” üzenetet jelenít meg az alkalmazás. A toast üzenethez tartozó adatot (szöveg, háttérszín) nem szerettem volna az
@@ -452,7 +455,7 @@ URL-en keresztül átadni, ezért azt egy cookie-ban tárolom, melyet a kiolvas�
 
 \subsection{Login backend, session validáció (09.14.)}
 
-A bejelentkezés backend részét implementáltam (Ábra \ref{fig:login}), valamint – a minden
+A bejelentkezés backend részét implementáltam (\ref{fig:login}.~ábra), valamint – a minden
 kérés előtt lefutó (\inlts{hooks.server.ts}) – session validációt, amely a böngészőtől cookie
 header formájában kapott session token-t ellenőrzi. \\
 
@@ -517,7 +520,7 @@ jelszavát
 
 \subsection{Profil infó oldal, EntraPass adatok(09.15.)}
 
-A mai napot a profil infó oldal (Ábra \ref{fig:profile_info}) implementálásával kezdtem. Itt tekinthetik meg a
+A mai napot a profil infó oldal (\ref{fig:profile_info}.~ábra) implementálásával kezdtem. Itt tekinthetik meg a
 felhasználók az adataikat.
 
 \begin{figure}[ht]
@@ -543,8 +546,8 @@ a hozzáadott .csv fájlokat feldolgozza és a saját adatbázisába menti. \\
 
 \textit{CSV adatok, adatbázisba mentett adatok}
 
-Az EntraPass által generált riportok formája a \ref{fig:csv_format}. ábrán látható.
-Ebből a formátumból kell majd a \ref{fig:card_usages_schema}. ábrán megjelölt séma szerint menteni az adatokat az adatbázisba. Idő közben a követelmények bővültek
+Az EntraPass által generált riportok formája \aref{fig:csv_format}.~ábrán látható.
+Ebből a formátumból kell majd \aref{fig:card_usages_schema}.~ábrán megjelölt séma szerint menteni az adatokat az adatbázisba. Idő közben a követelmények bővültek
 azzal, hogy egy esetleges vészhelyzet esetén az alkalmazással az éppen gyárban
 tartózkodó személyeket is meg lehessen jeleníteni. Ehhez két további táblát is létre
 kell majd hozzak. Megfigyelhető, hogy az \inltxt{emergency_card_usages} tábla nem tartalmaz HR
@@ -694,7 +697,7 @@ A timesheet oldallal kezdtem el foglalkozni. Első körben egy dátum intervallu
 szerettem volna implementálni, hogy a munkaidő adatokat a felhasználók dátum szerint tudják szűrni.
 Mivel, a Skeleton UI Toolkit nem tartalmaz ilyen komponenst, igy a \href{https://vanilla-calendar.pro/}{vanilla-calendar-pro} könyvtárra
 esett a választásom. Egyetlen hátulütője az volt, hogy a naptár színeit csak úgy tudtam testreszabni,
-hogy a könyvtárhoz tartozó CSS fájlokat felülírtam a saját CSS fájljaimmal. A végeredmény a \ref{fig:calendars}. ábrán
+hogy a könyvtárhoz tartozó CSS fájlokat felülírtam a saját CSS fájljaimmal. A végeredmény \aref{fig:calendars}.~ábrán
 látható.\\
 
 \begin{figure}[ht]
@@ -718,7 +721,7 @@ látható.\\
 
 Ezt követően létrehoztam egy \inltxt{/api/shift-view-data/search} API útvonalat, valamint az ennek
 megfelelő \inltxt{apiClient.fetchShiftViewData()} függvényt, mely utóbbit a böngésző a „keresés”
-gombra kattintva meghív (Ábra \ref{fig:timesheet_search}). E mellett az oldal PageLoad függvényét is megírtam, hogy az első
+gombra kattintva meghív (\ref{fig:timesheet_search}.~ábra). E mellett az oldal PageLoad függvényét is megírtam, hogy az első
 betöltéskor – SSR-et alkalmazva – az oldal már tartalmazza az aktuális havi adatokat.
 
 \begin{figure}[ht]
@@ -733,7 +736,7 @@ betöltéskor – SSR-et alkalmazva – az oldal már tartalmazza az aktuális h
 A timesheet oldalra egy olyan "lapozható" komponenst implementáltam, amellyel a
 felhasználó a keresett intervallumban szereplő munkaidő adatokat
 (\inltxt{Office|ProductionShiftViewData.shifts}) tudja megtekinteni napokra bontva. Termelés
-nézetben (Ábra \ref{fig:production_view}) a komponens lenyitható füleket tartalmaz, míg irodai nézet esetében (Ábra \ref{fig:office_view}) a komponens csak
+nézetben (\ref{fig:production_view}.~ábra) a komponens lenyitható füleket tartalmaz, míg irodai nézet esetében (\ref{fig:office_view}.~ábra) a komponens csak
 egyszintes.
 
 \begin{figure}[ht]
@@ -766,7 +769,7 @@ Egy DataNotFound komponens implementálásával kezdtem, amely akkor jelenik meg
 oldalon, ha az adott intervallumban nem található adat.\\
 
 Ez után, egy olyan lapozható táblázatot adtam hozzá az oldalhoz, melyben a kártyahasználati adatokat
-lehet megtekinteni (Ábra \ref{fig:card_usages_table}).
+lehet megtekinteni (\ref{fig:card_usages_table}.~ábra).
 
 \begin{figure}[ht]
   \centering
@@ -778,7 +781,7 @@ lehet megtekinteni (Ábra \ref{fig:card_usages_table}).
 \subsection{StatCards komponens, hiba javítása (09.26.)}
 
 A timesheet oldalra írtam egy olyan komponenst, amelyben "kártyákban" szerepelnek a lekért
-munkaidő adatokhoz (\inltxt{Office|ProductionShiftViewData}) tartozó statisztikák (Ábra \ref{fig:stat_cards}). Például:
+munkaidő adatokhoz (\inltxt{Office|ProductionShiftViewData}) tartozó statisztikák (\ref{fig:stat_cards}.~ábra). Például:
 dolgozott napok száma, összes túlóra, összes dolgozott idő, stb.\\
 
 \begin{figure}[ht]
@@ -795,7 +798,7 @@ valamint írtam néhány tesztet is hozzájuk.
 \subsection{MultilineChart komponens (09.27.)}
 
 A timesheet oldalra implementáltam a \href{https://layercake.graphics/}{layercake} library segítségével egy több vonalt tartalmazó
-diagramot. Ezen a diagramon (Ábra \ref{fig:chart}.) napokra bontva szerepel az összes dolgozott idő, a túlóra, valamint -
+diagramot. Ezen a diagramon (\ref{fig:chart}.~ábra) napokra bontva szerepel az összes dolgozott idő, a túlóra, valamint -
 termelési nézet esetén - az összes gyárban, és termelésben töltött idő.
 
 \begin{figure}[ht]
@@ -810,7 +813,7 @@ termelési nézet esetén - az összes gyárban, és termelésben töltött idő
 A munkaidő adatok PDF-ként való exportálását
 oldottam meg a \href{https://www.npmjs.com/package/jspdf}{jspdf} könyvtár segítségével. A
 felhasználó kiválaszthatja egy checkbox
-segítségével (Ábra \ref{fig:export_component}), hogy az exportált pdf (Ábra \ref{fig:report_pdf}) tartalmazza e a
+segítségével (\ref{fig:export_component}.~ábra), hogy az exportált pdf (\ref{fig:report_pdf}.~ábra) tartalmazza e a
 kártyahasználati adatokat, valamint termelési
 nézetben a lenyíló fülek tartalmát.
 
@@ -831,7 +834,7 @@ nézetben a lenyíló fülek tartalmát.
 \subsection{XLSX-be exportálás (09.29.)}
 
 A tegnapi nap mintájára, ma a munkaidő adatok XLSX-ként való exportálását implementáltam az
-\href{https://www.npmjs.com/package/exceljs}{exceljs} könyvtár segítségével (Ábra \ref{fig:report_xlsx}).
+\href{https://www.npmjs.com/package/exceljs}{exceljs} könyvtár segítségével (\ref{fig:report_xlsx}.~ábra).
 
 \begin{figure}[ht]
   \centering
@@ -856,10 +859,10 @@ tartozó \inltxt{apiClient.searchUsers()} függvényt.
 
 \subsection{/admin/employees oldal (10.17.)}
 
-Elkészítettem a dolgozók táblázatát (Ábra \ref{fig:employees}.) tartalmazó \inltxt{/admin/employees} oldalt. A táblázat fejlécében a
+Elkészítettem a dolgozók táblázatát (\ref{fig:employees}.~ábra) tartalmazó \inltxt{/admin/employees} oldalt. A táblázat fejlécében a
 felhasználó módosíthatja a rendezési beállításokat, és az adott mezőhöz tartozó szűrőt is. Az utolsó
 oszlopban három gomb található: a bal oldali a dolgozó munkaidő-adatait megjelenítő oldalra, a
-középső a dolgozó profiloldalára navigál, míg a jobb szélső gomb a dolgozó adatainak törlésére (Ábra \ref{fig:delete_employee}) szolgál.
+középső a dolgozó profiloldalára navigál, míg a jobb szélső gomb a dolgozó adatainak törlésére (\ref{fig:delete_employee}.~ábra) szolgál.
 Ez a törlés nem érinti az Active Directory-ban tárolt felhasználói adatokat, csak a dashboard alkalmazás
 adatbázisából távolítja el a kapcsolódó adatokat.
 
@@ -905,7 +908,7 @@ Ezt követően elkészítettem a \inltxt{/api/admin/card-usages/search} végpont
 \subsection{/admin/card-usages oldal (10.19.)}
 
 Elkezdtem dolgozni a kártyahasználati adatokat megjelenítő \inltxt{/admin/card-usages} oldalon.
-Létrehoztam a kártyahasználati adatokat tartalmazó táblázatot (Ábra \ref{fig:admin_card_usages}), amely hasonló a dolgozók
+Létrehoztam a kártyahasználati adatokat tartalmazó táblázatot (\ref{fig:admin_card_usages}.~ábra), amely hasonló a dolgozók
 táblázatához, de az adatok itt szerveroldali pagination-el érhetők el, mivel az alklalmazás az adatokat
 a saját adatbázisából kéri le. A táblázatban a felhasználó egyesével törölhet, módosíthat, új rekordokat
 hozhat létre, illetve egyszerre több kijelölt rekordot is törölhet.
@@ -917,7 +920,7 @@ hozhat létre, illetve egyszerre több kijelölt rekordot is törölhet.
   \label{fig:admin_card_usages}
 \end{figure}
 
-A nap végére sikerült befejezni a törlés funkciót (Ábra \ref{fig:delete_card_usage}). \\
+A nap végére sikerült befejezni a törlés funkciót (\ref{fig:delete_card_usage}.~ábra). \\
 
 
 \begin{figure}[ht]
@@ -932,7 +935,7 @@ A szerkesztési funkcióhoz tartozó modal
 (modális ablak) implementálása során
 problémába ütköztem: az általam
 használt Vanilla Calendar Pro könyvtár időbeviteli mezője csak órák és percek megadását támogatja.
-Ezért létrehoztam egy saját \inltxt{TimeInput} komponenst (Ábra \ref{fig:time_input}), amely lehetővé teszi a másodperc értékének
+Ezért létrehoztam egy saját \inltxt{TimeInput} komponenst (\ref{fig:time_input}.~ábra), amely lehetővé teszi a másodperc értékének
 megadását is.
 
 \begin{figure}[ht]
@@ -946,7 +949,7 @@ megadását is.
 
 A hátralévő funkciókat, vagyis a kártyahasználati adatok
 szerkesztését, új rekordok létrehozását, valamint a kijelölt rekordok
-törlését implementáltam frontend-, és backendoldalon. (Ábra \ref{fig:manage_card_usages}.)
+törlését implementáltam frontend-, és backendoldalon. (\ref{fig:manage_card_usages}.~ábra)
 
 \begin{figure}[ht]
     \centering
@@ -989,7 +992,7 @@ csoportokat létrehozni, például HR, IT, stb. részlegek számára, majd dolgo
 beosztottként vagy felettesként. A csoportokhoz rendelt dolgozók eltávolíthatók, a csoportok
 átnevezhetők, illetve törölhetők lesznek.\\
 
-Először létrehoztam a \inltxt{SupervisementGroups} adatbázis sémát (Ábra \ref{fig:sup_groups_schema}.), majd megírtam a supervisement
+Először létrehoztam a \inltxt{SupervisementGroups} adatbázis sémát (\ref{fig:sup_groups_schema}.~ábra), majd megírtam a supervisement
 service következő függvényeit: \inltxt{createGroup}, \inltxt{getSupervisementGroupById}, \inltxt{deleteGroup},
 \inltxt{renameGroup}, \inltxt{getPaginatedSupervisementGroups}. Ezt követően az ezekhez a
 függvényekhez tartozó \inltxt{/api} végpontokat kezdtem el írni.
@@ -1005,7 +1008,7 @@ függvényekhez tartozó \inltxt{/api} végpontokat kezdtem el írni.
 
 Befejeztem a tegnap megkezdett \inltxt{/api} végpontok megírását, majd az azoknak megfelelő \inltxt{apiClient}
 függvényeket írtam meg. Végül az \inltxt{/admin/supervisement-groups} oldalt kezdtem el
-implementálni (Ábra \ref{fig:sup_groups}.), amely egy táblázatot tartalmaz a létrehozott supervisement csoportokról.
+implementálni (\ref{fig:sup_groups}.~ábra), amely egy táblázatot tartalmaz a létrehozott supervisement csoportokról.
 
 \begin{figure}[ht]
   \centering
@@ -1018,7 +1021,7 @@ implementálni (Ábra \ref{fig:sup_groups}.), amely egy táblázatot tartalmaz a
 
 Befejeztem a tegnap elkezdett \inltxt{/admin/supervisement-groups} oldal implementálását. \\
 
-Ezt követően létrehoztam a \inltxt{SupervisementGroupMemberships} adatbázis sémat (Ábra \ref{fig:sup_schema}), amely a
+Ezt követően létrehoztam a \inltxt{SupervisementGroupMemberships} adatbázis sémat (\ref{fig:sup_schema}.~ábra), amely a
 dolgozók csoportokhoz rendelését valósítja meg.
 
 \begin{figure}[ht]
@@ -1040,7 +1043,7 @@ tartozó \inltxt{apiClient} függvényeket.
 
 Befejeztem a tegnap elkezdett \inltxt{apiClient} függvények implementálását, majd az
 \inltxt{/admin/supervisement-groups/[id]} oldalt kezdtem el implementálni, amely két táblázatot
-tartalmaz (Ábra \ref{fig:sup_edit}). A bal oldali táblázat tartalmazza azokat a dolgozókat, akik még nincsenek hozzáadva a csoporthoz. Az
+tartalmaz (\ref{fig:sup_edit}.~ábra). A bal oldali táblázat tartalmazza azokat a dolgozókat, akik még nincsenek hozzáadva a csoporthoz. Az
 utolsó oszlopban található két gomb segítségével lehet hozzáadni őket (felettesként vagy
 beosztottként). A jobb oldali táblázat pedig a csoporthoz már hozzáadott dolgozókat fogja tartalmazni.
 tt az utolsó oszlopban lehetőség lesz a dolgozó eltávolítására a csoportból, valamint az
@@ -1056,7 +1059,7 @@ tt az utolsó oszlopban lehetőség lesz a dolgozó eltávolítására a csoport
 
 \subsection{/admin/supervisement-groups/[id] oldal (2) (10.27.)}
 
-Befejeztem az /admin/supervisement-groups/[id] oldal implementálását (Ábra \ref{fig:sup_edit_final}.).
+Befejeztem az /admin/supervisement-groups/[id] oldal implementálását (\ref{fig:sup_edit_final}.~ábra).
 
 \begin{figure}[ht]
   \centering
@@ -1091,7 +1094,7 @@ függvényekkel, majd az ezeknek megfelelő \inltxt{/api} végpontokat és az \i
 meg.\\
 
 Ez után a \inltxt{/supervisor/groups}, valamint a \inltxt{/supervisor/groups/[id]} oldalakat
-implementáltam (Ábra \ref{fig:groups_pages}). A \inltxt{/supervisor/groups} oldalon a felettes megtekintheti a saját felügyelt
+implementáltam (\ref{fig:groups_pages}.~ábra). A \inltxt{/supervisor/groups} oldalon a felettes megtekintheti a saját felügyelt
 csoportjait. A jobb oldali oszlopban linkek mutatnak az egyes csoportok részletes oldalaira
 (\inltxt{/supervisor/groups/[id]}). A részletes oldalon egy táblázat jelenik meg, amely az adott csoport
 beosztott dolgozóit listázza. Itt a jobb szélső oszlopban a linkek az adott dolgozó munkaidő adatok,
@@ -1122,7 +1125,7 @@ valamint profil infó oldalára mutatnak.
 
 \subsection{Főoldal és hiba oldalak (11.01.)}
 
-A mai napon a főoldalt, valamint a hiba oldalakat implementáltam (Ábra \ref{fig:home_page}, \ref{fig:error_page}).
+A mai napon a főoldalt, valamint a hiba oldalakat implementáltam (Ábra \ref{fig:home_page}. és \ref{fig:error_page}.).
 
 \begin{figure}[ht]
   \centering
