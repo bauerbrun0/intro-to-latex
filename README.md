@@ -8,6 +8,8 @@ latexmk -pvc --shell-escape -pdf munkanaplo.tex
 
 ### Build
 
+On first try, the TOC might not be generated correctly. Run the command again to fix it.
+
 ```bash
 latexmk --shell-escape -pdf munkanaplo.tex
 # or
