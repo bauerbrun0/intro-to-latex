@@ -1,5 +1,7 @@
 ### Dev
 
+-pvc flag watches for changes in the files and rebuilds the pdf file automatically.
+
 ```bash
 latexmk -pvc --shell-escape -pdf munkanaplo.tex
 ```

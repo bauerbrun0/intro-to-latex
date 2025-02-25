@@ -7,19 +7,26 @@
 % Used to remove numbering from sections
 \usepackage{titlesec}
 
-\usepackage{xcolor}
-\definecolor{codebg}{RGB}{240, 240, 240} % Light gray background
-\usepackage[colorlinks=true, linkcolor=black, filecolor=black, urlcolor=blue]{hyperref}
+% For figures
 \usepackage{graphicx}
-\usepackage{subcaption} % For subfigures
-\usepackage{placeins}
+% For subfigures
+\usepackage{subcaption}
+
+% xcolor package for minted and hyperref
+\usepackage{xcolor}
+% Light gray background for code snippets
+\definecolor{codebg}{RGB}{240, 240, 240}
+\usepackage[colorlinks=true, linkcolor=black, filecolor=black, urlcolor=blue]{hyperref}
+
 % Used to render code snippets
 \usepackage{minted}
+% For \FloatBarrier
+\usepackage{placeins}
 
 % No numbering for sections (eg. Első Hét)
 \titleformat{\section}{\Large\bfseries}{}{0pt}{}{}
 
-% inline code snippets
+% Inline code snippets
 \newcommand{\inlts}[1]{\mintinline[breaklines, breakanywhere]{typescript}{#1}}
 \newcommand{\inltxt}[1]{\mintinline[breaklines, breakanywhere]{text}{#1}}
 
