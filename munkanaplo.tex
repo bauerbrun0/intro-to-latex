@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[a4paper]{article}
 
 % Hungarian language
 \PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
@@ -8,39 +8,20 @@
 \usepackage{titlesec}
 
 \usepackage{xcolor}
+\definecolor{codebg}{RGB}{240, 240, 240} % Light gray background
 \usepackage[colorlinks=true, linkcolor=black, filecolor=black, urlcolor=blue]{hyperref}
 \usepackage{graphicx}
 \usepackage{subcaption} % For subfigures
 \usepackage{placeins}
 % Used to render code snippets
-\usepackage{listings}
-
-\lstdefinelanguage{JavaScript}{
-    keywords={abstract, any, as, boolean, break, case, catch, class, console,
-        const, continue, debugger, declare, default, delete, do, else, enum, export,
-        extends, false, finally, for, from, function, get, if, implements, import, in,
-        infer, instanceof, interface, keyof, let, module, namespace, never, new, null,
-        number, object, package, private, protected, public, readonly, require, return,
-        set, static, string, super, switch, symbol, this, throw, true, try, type, typeof,
-        undefined, unique, unknown, var, void, while, with, yield}
-    morecomment=[l]{//},
-    morecomment=[s]{/*}{*/},
-    morestring=[b]',
-    morestring=[b]",
-    sensitive=true
-}
+\usepackage{minted}
 
 % No numbering for sections (eg. Első Hét)
 \titleformat{\section}{\Large\bfseries}{}{0pt}{}{}
 
 % inline code snippets
-\newcommand{\inlts}[1]{\lstinline[language=JavaScript, basicstyle=\small\ttfamily, keywordstyle=\color{blue}]{#1}}
-\newcommand{\inltxt}[1]{\lstinline[basicstyle=\small\ttfamily]{#1}}
-
-% code blocks - these do not work for some reason
-% \newenvironment{codets}{\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]}{\end{lstlisting}}
-% \newenvironment{codebash}{\begin{lstlisting}[language=bash, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]}{\end{lstlisting}}
-% \newenvironment{codetxt}{\begin{lstlisting}[backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]}{\end{lstlisting}}
+\newcommand{\inlts}[1]{\mintinline[breaklines, breakanywhere]{typescript}{#1}}
+\newcommand{\inltxt}[1]{\mintinline[breaklines, breakanywhere]{text}{#1}}
 
 \title{Szakmai Gyakorlat Munkanapló}
 \author{Bauer Brúnó Csaba}
@@ -94,17 +75,19 @@ Később rá is találtam egy JavaScript (TypeScript) könyvtárra \inlts{ldapts
 AD szerverhez kéréseket küldeni. A könyvtár – a webalkalmazás szempontjából - két legfontosabb
 függvénye:
 
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\FloatBarrier
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 bind(dnOrSaslMechanism, [password], [controls])
-\end{lstlisting}
+\end{minted}
 
 A \inlts{bind} függvény egy bind operációt kezdeményez az AD szerver felé. Ezzel az operációval
 autentikálhatjuk magunkat az AD szerver felé. Sikeres bind után, az azt követő kérések már az adott
 felhasználó nevével történnek.
 
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\FloatBarrier
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 search(baseDN, options, [controls])
-\end{lstlisting}
+\end{minted}
 
 A search operációval LDAP entrykre - pl. felhasználókra - kereshetünk. A kereséshez LDAP filtert kell
 írni. Mivel ezek a filterek - hasonlóan az SQL lekérdezésekhez - sérülékenyek injection támadásra, ezért
@@ -215,7 +198,8 @@ Az Active Directory service-t kezdem el írni, vagyis azt a fájlt, amiben az AD
 kommunikációhoz szükséges függvények találhatók. Első körben egy \inlts{start} és egy \inlts{stop} függvényt
 implementáltam.
 
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\FloatBarrier
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 // lib/services/activeDirectoryService.ts
 let ldapClient: LdapClient;
 let reconnecting = false;
@@ -230,7 +214,7 @@ const activeDirectoryService: ActiveDirectoryService = {
 };
 
 export default activeDirectoryService;
-\end{lstlisting}
+\end{minted}
 
 A \inlts{start} függvény lényegében egy LDAP klienst inicializál, majd pedig egy bind operációt hajt végre az
 AD szerveren, az alkalmazás számára létrehozott admin felhasználó DN és jelszó párosával.\\
@@ -262,7 +246,8 @@ A \inlts{getUserBysAMAccountName} függvény pedig egy felhasználónevet (sAMAc
 paraméternek és egy search operációval megpróbálja megkeresni az AD szerveren a felhasználót. A
 válaszként kapott felhasználó parseolásához a typebox library-t használom:
 
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\FloatBarrier
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 // lib/types/user.ts
 import { Type } from "@sinclair/typebox";
 import type { Static } from "@sinclair/typebox";
@@ -284,13 +269,14 @@ export const activeDirectoryUserSchema = Type.Object({
 export type ActiveDirectoryUser = Static<typeof activeDirectoryUserSchema>;
 export const activeDirectoryUserValidator: Validator<ActiveDirectoryUser> =
     createValidator<ActiveDirectoryUser>(activeDirectoryUserSchema);
-\end{lstlisting}
+\end{minted}
 
 Mivel a projekt követelményei közé tartozott az is, hogy az alkalmazás az AD-ben szereplő jelszavak
 lejárati dátumait vegye figyelembe a session kezelésnél, így a pwdLastSet attribútumot is át kellett
 konvertáljam dátum objektummá, melyet az alábbi függvénnyel oldottam meg:
 
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\FloatBarrier
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 // lib/utils/activeDirectoryUtils.ts
 export function parseActiveDirectoryDate(activeDirectoryDate: string): Date {
 	const truncatedPwdLastSet = activeDirectoryDate.substring(
@@ -301,7 +287,7 @@ export function parseActiveDirectoryDate(activeDirectoryDate: string): Date {
 	const windowsEpoch = Date.UTC(1601, 0, 1);
 	return new Date(windowsEpoch + Number.parseInt(truncatedPwdLastSet));
 }
-\end{lstlisting}
+\end{minted}
 
 \subsubsection*{Tesztelés előkészítése}
 A tesztelés nem szerepelt a projektkövetelmények között, valamint idő szűkében nem is tudnék 100%-
@@ -328,7 +314,8 @@ futnak le, illetve dobnak hibákat.
 Annak érdekében, hogy az AD service-t megfelelően lehessen tesztelni, (”singleton”) osztállyá
 alakítottam át azt, így minden tesztet külön példánnyal lehet végrehajtani.
 
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\FloatBarrier
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 // lib/services/ActiveDirectoryService.ts
 class ActiveDirectoryService {
     protected static _instance: ActiveDirectoryService | undefined = undefined;
@@ -369,13 +356,14 @@ class ActiveDirectoryService {
     async getUserBysAMAccountName(sAMAccountName: string): Promise<User> { ... }
     ...
 }
-\end{lstlisting}
+\end{minted}
 
 \subsubsection*{Tesztek írása}
 
 Ezt követően a következő AD service unit teszteket írtam meg:
 
-\begin{lstlisting}[backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\FloatBarrier
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}
 // pnpm run test:unit
 src/lib/services/ActiveDirectoryService.test.ts (20)
     ActiveDirectoryService Singleton Tests (2)
@@ -406,7 +394,7 @@ src/lib/services/ActiveDirectoryService.test.ts (20)
         should throw an InternalError if a connection error occures
         should throw an InternalError if an unknown error occures
 
-\end{lstlisting}
+\end{minted}
 
 \subsection{Header komponens, Login oldal (frontend) (09.13.)}
 
@@ -468,35 +456,35 @@ header formájában kapott session token-t ellenőrzi. \\
 
 A következő függvényeket implementáltam a \inltxt{lib/auth/session.ts} modulban:
 
-% \begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
-% // lib/auth/session.ts
-% export function generateSessionToken(): string {}
+\FloatBarrier
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
+// lib/auth/session.ts
+export function generateSessionToken(): string {}
 
-% export async function createSession(
-%    token: string,
-%    userEmployeeId: string,
-%    userPasswordLastSet: Date,
-%    passwordChangeIntervalInMinutes: number,
-%): Promise<Session> {}
+export async function createSession(
+    token: string,
+   userEmployeeId: string,
+   userPasswordLastSet: Date,
+   passwordChangeIntervalInMinutes: number,
+): Promise<Session> {}
+export async function validateSessionToken(
+    token: string,
+): Promise<SessionValidationResult> {}
 
-% export async function validateSessionToken(
-%    token: string,
-%): Promise<SessionValidationResult> {}
+export async function invalidateSession(sessionId: string): Promise<void> {}
 
-%export async function invalidateSession(sessionId: string): Promise<void> {}
+export type SessionValidationResult =
+    | { session: Session; user: User }
+    | { session: null; user: null };
 
-%export type SessionValidationResult =
-%    | { session: Session; user: User }
-%    | { session: null; user: null };
+export function setSessionTokenCookie(
+    event: RequestEvent,
+    token: string,
+    expiresAt: Date,
+): void {}
 
-%export function setSessionTokenCookie(
-%    event: RequestEvent,
-%    token: string,
-%    expiresAt: Date,
-%): void {}
-
-%export function deleteSessionTokenCookie(event: RequestEvent): void {}
-% \end{lstlisting}
+export function deleteSessionTokenCookie(event: RequestEvent): void {}
+\end{minted}
 
 A \inlts{createSession()} függvény egy Postgres adatbázis sessions táblájába tárolja el a
 létrehozott sessionöket. A létrehozáskor a session lejárati dátumát – a követelményeknek
@@ -599,7 +587,7 @@ adatokra van szükség. A timesheet oldal betöltésekor az alkalmazás két dá
 rekordokat lekérdezi, majd átalakítja az alábbi két típus valamelyikébe.
 
 \FloatBarrier
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 // lib/types/shiftViewData.ts
 export type ProductionShiftViewData = {
     shifts: {
@@ -652,7 +640,7 @@ export type OfficeShiftViewData = {
     leastTimeWorkedMs: number;
     totalOvertimeMs: number;
 };
-\end{lstlisting}
+\end{minted}
 
 A tervezés után el is elkezdtem implementálni ezt a működést. Az átalakítást két részre bontva, a
 rekordokat először \inlts{Production/OfficeShiftVewDataIntervalDates} típusba alakítom.
@@ -660,7 +648,7 @@ Ezekben a típusokban csak a kezdő és záró dátumok találhatók. A később
 két másik függvényben számolom ki.
 
 \FloatBarrier
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 // lib/types/shiftViewData.ts
 export type ProductionShiftViewDataIntervalDates = {
     shifts: {
@@ -688,7 +676,7 @@ export type OfficeShiftViewDataIntervalDates = {
         lastFactoryExit: Date;
     }[];
 };
-\end{lstlisting}
+\end{minted}
 
 \subsection{Kártyahasználati adatok átalakítása a munkaidő kimutatás oldal\\ betöltésekor (2) (09.20.)}
 
@@ -894,7 +882,7 @@ lépésként implementáltam a cardUsage service \inltxt{getPaginatedCardUsages(
 következő paraméterekkel:
 
 \FloatBarrier
-\begin{lstlisting}[language=JavaScript, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
 export type CardUsageSearchParams = {
     pageNumber: number;
     pageSize: number;
@@ -907,7 +895,7 @@ export type CardUsageSearchParams = {
     startDate?: Date;
     endDate?: Date;
 };
-\end{lstlisting}
+\end{minted}
 
 Ezt követően elkészítettem a \inltxt{/api/admin/card-usages/search} végpontot és a hozzá tartozó
 \inltxt{apiClient.searchPaginatedCardUsages} függvényt.
@@ -1163,11 +1151,11 @@ környezeti változók fájlból való beolvasását. A végleges parancs a dock
 lett:
 
 \FloatBarrier
-\begin{lstlisting}[language=bash, keywordstyle=\color{blue}, backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{bash}
 env $(cat /srv/dashboard/deploy/.env | grep ^[A-Z] | xargs) docker stack deploy -c
 /srv/dashboard/deploy/docker-stack.yml seiren-dashboard --with-registry-auth
 --detach=true
-\end{lstlisting}
+\end{minted}
 
 \subsection{GitHub Workflow (11.03.)}
 
@@ -1196,7 +1184,7 @@ szinkronizálja a riport mappákat a két szerver között. \\
 Unison fájlok:
 
 \FloatBarrier
-\begin{lstlisting}[backgroundcolor=\color{lightgray}, basicstyle=\small\ttfamily, breaklines]
+\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}
 # daily-report-sync.prf
 
 root = C:\Users\Kantech-PC\Documents\EntraPass\Daily
@@ -1220,7 +1208,7 @@ auto = true
 batch = true
 confirmbigdel = false
 confirmmerge = false
-\end{lstlisting}
+\end{minted}
 
 Az a probléma lépett fel, hogy a unison ideiglenes (temp) fájlokkal dolgozik, így az alkalmazás azokat
 a fájlokat is megpróbálta beolvasni. Egy reguláris kifejezéssel ki tudtam szűrni ezeket a fájlokat.\\

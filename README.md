@@ -1,15 +1,15 @@
 ### Dev
 
 ```bash
-latexmk -pvc -pdf munkanaplo.tex
+latexmk -pvc --shell-escape -pdf munkanaplo.tex
 ```
 
 ### Build
 
 ```bash
-latexmk -pdf munkanaplo.tex
+latexmk --shell-escape -pdf munkanaplo.tex
 # or
-pdflatex munkanaplo.tex
+pdflatex --shell-escape munkanaplo.tex
 ```
 
 ### Clear latexmk/pdflatex temporary files
