@@ -17,6 +17,8 @@
 % For subfigures
 \usepackage{subcaption}
 
+\usepackage{siunitx}
+
 % xcolor package for minted and hyperref
 \usepackage{xcolor}
 % Light gray background for code snippets
@@ -65,14 +67,14 @@ részt. Ez után következett a projektfeladatom ismertetése
 A két hónapos időszak alatt egy webalkalmazást kell fejlesztenem a cég számára. A fő cél az, hogy egy
 olyan felületet hozzak létre, ahol az alkalmazottak nyomon követhetik a munkaidejüket, ugyanakkor
 fontos, hogy lehetőség legyen a későbbi bővítésekre is. További követelmény, hogy az autentikáció és
-a felhasználói adatok lekérdezése a cégen belül hamarosan bevezetésre kerülő Active Directory
-címtárszolgáltatás integrációjával történjen. A dolgozók beléptetése az EntraPass Special Edition
+a felhasználói adatok lekérdezése a cégen belül hamarosan bevezetésre kerülő \emph{Active Directory}
+címtárszolgáltatás integrációjával történjen. A dolgozók beléptetése az \emph{EntraPass Special Edition}
 szoftvercsomag segítségével történik, így ez lesz a forrása a beléptetési adatoknak.
 
 \subsection{Active Directory, tech stack, szerver telepítés, tervezés megkezdése (09.05.)}
 
-Mivel az Active Directory, illetve az LDAP protokoll számomra ismeretlen technológiák, ezért először
-ezekkel kezdtem el ismerkedni. (Fontosabb források: \cite{ldapjs, ldapWikipedia})\\
+Mivel az Active Directory, illetve az \emph{LDAP} protokoll számomra ismeretlen technológiák, ezért először
+ezekkel kezdtem el ismerkedni. (Fontosabb forrásokat lásd \cite{ldapjs, ldapWikipedia})\\
 
 Később rá is találtam egy JavaScript (TypeScript) könyvtárra \inlts{ldapts} néven
 (\href{https://github.com/ldapts/ldapts}{ldapts}), amely könyvtár alkalmas lesz az Active Directory szerverrel -- to\-váb\-bi\-ak\-ban \emph{AD szerver} -- való kommunikálásra. Elkezdtem ismerkedni a libraryvel, sikerült vele az
@@ -93,14 +95,14 @@ felhasználó nevével történnek.
 search(baseDN, options, [controls])
 \end{minted}
 
-A search operációval LDAP entrykre - pl. felhasználókra - kereshetünk. A kereséshez LDAP filtert kell
-írni. Mivel ezek a filterek - hasonlóan az SQL lekérdezésekhez - sérülékenyek injection támadásra, ezért
+A \emph{search} operációval LDAP ,,entrykre'' - pl. felhasználókra - kereshetünk. A kereséshez LDAP filtert kell
+írni. Mivel ezek a filterek -- hasonlóan az SQL lekérdezésekhez -- sérülékenyek injection támadásra, ezért
 escape-elni kell majd őket.
 
 \subsubsection*{Tech Stack}
 Technológiák terén annyi megkötés volt, hogy lehetőleg olyan eszközökkel dolgozzak, amelyeket az
 egyetemen is megismerhettünk. Mivel a Web programozás 2 tantárgy keretében lehetőség nyílik a
-SvelteKit keretrendszerrel/meta frameworkkel való megismerkedésre, illetve nekem is a JavaScript
+\emph{SvelteKit} keretrendszerrel/meta frameworkkel való megismerkedésre, illetve nekem is a JavaScript
 alapú webfejlesztésben van a legnagyobb tapasztalatom, így erre esett a választásom.\\
 
 Backend/Frontend:
@@ -117,10 +119,10 @@ Adatbázis:
 \end{itemize}
 
 \subsubsection*{Szerver telepítés}
-A szerverhez biztosított a cég két 500 GB-os HDD-t, melyeket elsősorban beszereltem. A webszerverre
+A szerverhez biztosított a cég két \qty{500}{\giga\byte}-os HDD-t, melyeket elsősorban beszereltem. A webszerverre
 Debian 12 disztribúciót telepítettem a stabilitása miatt. Telepítés során a két HDD-t szoftveres RAID1-
-be konfiguráltam. A RAID1 miatt ugyan lassabb lesz az írás a merevlemezre, valamint az 1 TB helyett
-mindössze 500GB lesz elérhető, azonban a tükrözés miatt nagyobb lesz a hibatűrés.
+be konfiguráltam. A RAID1 miatt ugyan lassabb lesz az írás a merevlemezre, valamint az  \qty{1}{\tera\byte} helyett
+mindössze \qty{500}{\giga\byte} lesz elérhető, azonban a tükrözés miatt nagyobb lesz a hibatűrés.
 
 \subsubsection*{Tervezés megkezése}
 Ezek után a projekt megkezdéséhez szükséges, kezdetleges terveket készítettem el.
@@ -152,7 +154,7 @@ beállítottam a Skeleton UI toolkitet, amely UI komponenseket biztosít a gyors
 (linting).\\
 
 Bár az i18n (több nyelv támogatása) nem volt a projekt követelményeiben, mégis úgy döntöttem, hogy
-már az elején implementálom, hogy később – amennyiben szükség lesz rá - egyszerűbb legyen bővíteni
+már az elején implementálom, hogy később –- amennyiben szükség lesz rá -- egyszerűbb legyen bővíteni
 a nyelvi beállításokat.\\
 
 A felhasználói élmény növelése érdekében implementáltam a világos/sötét mód támogatást, így a
@@ -210,8 +212,8 @@ implementáltam.
 A \inlts{start} függvény lényegében egy LDAP klienst inicializál, majd pedig egy bind operációt hajt végre az
 AD szerveren, az alkalmazás számára létrehozott admin felhasználó DN és jelszó párosával.\\
 
-A különböző konfigurációk betöltéséért- mint például az AD szerver hosztja, vagy az előbb említett
-admin DN és jelszó – külön modulok felelnek a \inlts{lib/configs} mappában. Ezek a modulok a környezeti
+A különböző konfigurációk betöltéséért -- mint például az AD szerver hosztja, vagy az előbb említett
+admin DN és jelszó -– külön modulok felelnek a \inlts{lib/configs} mappában. Ezek a modulok a környezeti
 változókat olvassák be az alkalmazás indulásakor (\inlts{hooks.server.ts}) \\
 
 Fontosnak tartom, hogy az alkalmazás a lehető legjobban hibatűrő legyen, ezért azt is implementáltam
@@ -222,7 +224,7 @@ függvényt is.
 
 \subsubsection*{Logolás}
 
-Ezt követően a logolással foglalkoztam. A pino libraryt adtam hozzá a projekthez.
+Ezt követően a logolással foglalkoztam. A \inltxt{pino} libraryt adtam hozzá a projekthez.
 
 \section{Második Hét}
 
@@ -256,12 +258,12 @@ oldottam meg \acite{pwdLastSet} segítségével.
 
 \subsubsection*{Tesztelés előkészítése}
 A tesztelés nem szerepelt a projektkövetelmények között, valamint idő szűkében nem is tudnék 100\%-
-os kódlefedettséget elérni. Ennek ellenére az alkalmazás fontosabb részeihez – amennyiben időm
-engedi – írok unit teszteket. (Integrációs, illetve e2e teszteket még nem biztos, hogy fogok írni, de ha
+os kódlefedettséget elérni. Ennek ellenére az alkalmazás fontosabb részeihez –- amennyiben időm
+engedi -– írok unit teszteket. (Integrációs, illetve e2e teszteket még nem biztos, hogy fogok írni, de ha
 szükségét érzem, és időm engedi, akkor azokat is fogok.) \\
 
 Az AD service is egy ilyen fontosabb, illetve kérdéses része az alkalmazásnak. Ahhoz, hogy AD service
-unit teszteket tudjak írni szükséges egy ”mock” LDAP klienst létrehozni. Ehhez írtam először egy
+unit teszteket tudjak írni szükséges egy ''mock'' LDAP klienst létrehozni. Ehhez írtam először egy
 \inlts{AbstractLdapClient} osztályt, amit majd extendelni fog az \inlts{LdapClient} és a \inlts{MockLdapClient}
 osztály. A \inlts{MockLdapClient} osztályra már nem volt időm a mai nap.
 
@@ -270,13 +272,13 @@ osztály. A \inlts{MockLdapClient} osztályra már nem volt időm a mai nap.
 
 \subsubsection*{MockLdapClient}
 
-A mai napot a \inlts{MockLdapClient} osztály implementálásával kezdtem. Egyelőre csak két függvényt –
-\inlts{search} és \inlts{bind} – kellett megírnom, melyek a \inlts{tests/mocks/data/} mappában találhatók alapján
+A mai napot a \inlts{MockLdapClient} osztály implementálásával kezdtem. Egyelőre csak két függvényt –-
+\inlts{search} és \inlts{bind} –- kellett megírnom, melyek a \inlts{tests/mocks/data/} mappában találhatók alapján
 futnak le, illetve dobnak hibákat.
 
 \subsubsection*{ActiveDirectoryService osztállyá alakítása}
 
-Annak érdekében, hogy az AD service-t megfelelően lehessen tesztelni, (”singleton”) osztállyá
+Annak érdekében, hogy az AD service-t megfelelően lehessen tesztelni, (''singleton'') osztállyá
 alakítottam át azt (lásd \aref{listing:active_directory_service_singleton}.~kódot), így minden tesztet külön példánnyal lehet végrehajtani.
 
 \begin{listing}[!ht]
@@ -299,11 +301,11 @@ Ezt követően a következő AD service unit teszteket írtam meg. Outputjuk \ar
 
 A Header komponenst implementáltam először (\ref{fig:header_component}.~ábra). Sikerült teljesen
 reszponzívra megírni (\ref{fig:header_component_mobile}.~ábra). Tartalmaz
-két – egyelőre placeholder – menüsort, melyekre kattintva egy-egy ”dropdown” jelenik meg, a jobb
-sarokban egy ”profil gombot”, melyre kattintva szintén egy dropdown jelenik meg, ahol többek között
+két –- egyelőre placeholder –- menüsort, melyekre kattintva egy-egy \emph{dropdown} jelenik meg, a jobb
+sarokban egy \emph{profil gombot}, melyre kattintva szintén egy dropdown jelenik meg, ahol többek között
 ki lehet választani a nyelvet (magyar, angol), illetve változtatni lehet a témán (sötét/világos). Ezen
-kívül, a Header bal sarkában egy ”hamburger”, vagyis menü ikon jelenik meg mobileszközökön. Erre
-kattintva egy oldalsó menüsor (”drawer”) jelenik meg a placeholder menüpontokkal.
+kívül, a Header bal sarkában egy \emph{hamburger}, vagyis menü ikon jelenik meg mobileszközökön. Erre
+kattintva egy oldalsó menüsor (\emph{drawer}) jelenik meg a placeholder menüpontokkal.
 
 \begin{figure}[ht]
   \centering
@@ -337,7 +339,7 @@ kattintva egy oldalsó menüsor (”drawer”) jelenik meg a placeholder menüpo
 Ezt követően a bejelentkezési oldal frontend részét csináltam meg (\ref{fig:login_page}.~ábra).
 A bejelentkezés gomb megnyomásával a böngésző egy \inltxt{POST} kérést küld a szervernek.
 Amennyiben sikeres a bejelentkezés, a szerver átirányít a kezdőoldalra, ahol egy
-felugró, ”toast” üzenetet jelenít meg az alkalmazás. A toast üzenethez tartozó adatot (szöveg, háttérszín) nem szerettem volna az
+felugró, \emph{toast} üzenetet jelenít meg az alkalmazás. A toast üzenethez tartozó adatot (szöveg, háttérszín) nem szerettem volna az
 URL-en keresztül átadni, ezért azt egy cookie-ban tárolom, melyet a kiolvasás után egyből törlök is.
 
 \begin{figure}[ht]
@@ -349,8 +351,8 @@ URL-en keresztül átadni, ezért azt egy cookie-ban tárolom, melyet a kiolvas�
 
 \subsection{Login backend, session validáció (09.14.)}
 
-A bejelentkezés backend részét implementáltam (\ref{fig:login}.~ábra), valamint – a minden
-kérés előtt lefutó (\inlts{hooks.server.ts}) – session validációt, amely a böngészőtől cookie
+A bejelentkezés backend részét implementáltam (\ref{fig:login}.~ábra), valamint –- a minden
+kérés előtt lefutó (\inlts{hooks.server.ts}) –- session validációt, amely a böngészőtől cookie
 header formájában kapott session token-t ellenőrzi. \\
 
 \Aref{listing:session}.~kódban látható függvényeket implementáltam a \inltxt{lib/auth/session.ts} modulban.
@@ -361,7 +363,7 @@ header formájában kapott session token-t ellenőrzi. \\
 \label{listing:session}
 \end{listing}
 
-A \inlts{createSession()} függvény egy Postgres adatbázis sessions táblájába tárolja el a
+A \inlts{createSession()} függvény egy \emph{Postgres} adatbázis \inltxt{sessions} táblájába tárolja el a
 létrehozott sessionöket. A létrehozáskor a session lejárati dátumát – a követelményeknek
 megfelelően – az adott felhasználó \inlts{PwdLastSet} attribútuma, valamint a környezeti változóként
 definiált \inlts{passwordLastChangeIntervalInMinutes} határozza meg
@@ -446,8 +448,8 @@ Másrészt, az AD szerverrel való kommunikáció csak egy plusz hibaforrást je
 
 A tegnapi napon megtervezettek szerint, ma az EntraPass adatok alkalmazás oldali feldolgozását
 implementáltam. Először megírtam a \inlts{reportFileParserService}-t, amely a chokidar könyvtárat
-felhasználva figyeli a – környezeti változóként megadott – „daily reports” és „emergency reports”
-mappákat. Amint egy új CSV fájl-t a mappák valamelyikébe másolunk, a service a csv-parser
+felhasználva figyeli a -- környezeti változóként megadott –- \emph{daily reports} és \emph{emergency reports}
+mappákat. Amint egy új CSV fájl-t a mappák valamelyikébe másolunk, a service a \inltxt{csv-parser}
 könyvtár segítségével parseolja azt, majd az átalakított (\inlts{ParsedDailyReportRow}, illetve
 \inlts{ParsedEmergencyReportRow} típusok) adatokkal meghívja a \inlts{cardUsageService}
 \inlts{insertParsedDailyReportRows} vagy \inlts{insertParsedEmergencyReportRows} metódusát. Ezek
@@ -517,7 +519,7 @@ látható.\\
 Ezt követően létrehoztam egy \inltxt{/api/shift-view-data/search} API útvonalat, valamint az ennek
 megfelelő \inltxt{apiClient.fetchShiftViewData()} függvényt, mely utóbbit a böngésző a „keresés”
 gombra kattintva meghív (\ref{fig:timesheet_search}.~ábra). E mellett az oldal PageLoad függvényét is megírtam, hogy az első
-betöltéskor – SSR-et alkalmazva – az oldal már tartalmazza az aktuális havi adatokat.
+betöltéskor -- \emph{SSR}-et alkalmazva -- az oldal már tartalmazza az aktuális havi adatokat.
 
 \begin{figure}[ht]
   \centering
@@ -528,7 +530,7 @@ betöltéskor – SSR-et alkalmazva – az oldal már tartalmazza az aktuális h
 
 \subsection{PaginatedShiftTreeView komponens (09.22.)}
 
-A timesheet oldalra egy olyan "lapozható" komponenst implementáltam, amellyel a
+A timesheet oldalra egy olyan \emph{lapozható} komponenst implementáltam, amellyel a
 felhasználó a keresett intervallumban szereplő munkaidő adatokat
 (\inltxt{Office|ProductionShiftViewData.shifts}) tudja megtekinteni napokra bontva. Termelés
 nézetben (\ref{fig:production_view}.~ábra) a komponens lenyitható füleket tartalmaz, míg irodai nézet esetében (\ref{fig:office_view}.~ábra) a komponens csak
@@ -560,7 +562,7 @@ egyszintes.
 
 \subsection{Kártyahasználati adatok táblázat (09.25.)}
 
-Egy DataNotFound komponens implementálásával kezdtem, amely akkor jelenik meg a timesheet
+Egy \inlts{DataNotFound} komponens implementálásával kezdtem, amely akkor jelenik meg a timesheet
 oldalon, ha az adott intervallumban nem található adat.\\
 
 Ez után, egy olyan lapozható táblázatot adtam hozzá az oldalhoz, melyben a kártyahasználati adatokat
@@ -593,8 +595,8 @@ valamint írtam néhány tesztet is hozzájuk.
 \subsection{MultilineChart komponens (09.27.)}
 
 A timesheet oldalra implementáltam a \href{https://layercake.graphics/}{layercake} library segítségével egy több vonalt tartalmazó
-diagramot. Ezen a diagramon (\ref{fig:chart}.~ábra) napokra bontva szerepel az összes dolgozott idő, a túlóra, valamint -
-termelési nézet esetén - az összes gyárban, és termelésben töltött idő.
+diagramot. Ezen a diagramon (\ref{fig:chart}.~ábra) napokra bontva szerepel az összes dolgozott idő, a túlóra, valamint --
+termelési nézet esetén -- az összes gyárban, és termelésben töltött idő.
 
 \begin{figure}[ht]
   \centering
@@ -719,7 +721,7 @@ A nap végére sikerült befejezni a törlés funkciót (\ref{fig:delete_card_us
 A szerkesztési funkcióhoz tartozó modal
 (modális ablak) implementálása során
 problémába ütköztem: az általam
-használt Vanilla Calendar Pro könyvtár időbeviteli mezője csak órák és percek megadását támogatja.
+használt \emph{Vanilla Calendar Pro} könyvtár időbeviteli mezője csak órák és percek megadását támogatja.
 Ezért létrehoztam egy saját \inltxt{TimeInput} komponenst (\ref{fig:time_input}.~ábra), amely lehetővé teszi a másodperc értékének
 megadását is.
 
@@ -734,7 +736,7 @@ megadását is.
 
 A hátralévő funkciókat, vagyis a kártyahasználati adatok
 szerkesztését, új rekordok létrehozását, valamint a kijelölt rekordok
-törlését implementáltam frontend-, és backendoldalon. (\ref{fig:manage_card_usages}.~ábra)
+törlését implementáltam frontend, és backend oldalon. (\ref{fig:manage_card_usages}.~ábra)
 
 \begin{figure}[ht]
     \centering
@@ -832,7 +834,7 @@ tartalmaz (\ref{fig:sup_edit}.~ábra). A bal oldali táblázat tartalmazza azoka
 utolsó oszlopban található két gomb segítségével lehet hozzáadni őket (felettesként vagy
 beosztottként). A jobb oldali táblázat pedig a csoporthoz már hozzáadott dolgozókat fogja tartalmazni.
 tt az utolsó oszlopban lehetőség lesz a dolgozó eltávolítására a csoportból, valamint az
-"előléptetésre", illetve a "lefokozására".
+''előléptetésre'', illetve a ''lefokozására''.
 
 
 \begin{figure}[ht]
@@ -861,7 +863,7 @@ A supervisement service-t kiegészítettem az \inltxt{isSupervisor}, \inltxt{isS
 \inltxt{isSupervisorOfEmployee} függvényekkel, majd ezeket a függvényeket alkalmaztam, illetve
 meghívtam minden szükséges helyen. \\
 
-Ezt követően az /admin/employees oldalon elérhető "Dolgozó adatainak törlése" funkciót fejeztem
+Ezt követően az /admin/employees oldalon elérhető ''Dolgozó adatainak törlése'' funkciót fejeztem
 be, melyhez meg kellett írnom a
 \inltxt{supervisementService.deleteEmployeeSupervisementRecords()}, a
 \inltxt{cardUsageService.deleteEmployeeCardUsageRecords()} függvényeket, valamint a
@@ -985,7 +987,7 @@ Ezúttal is minden lépésemet dokumentáltam.
 
 \subsection{Két bug kijavítása (11.08.)}
 
-Két bug kijavításán kezdtem el dolgozni. Az első mindössze annyi volt, hogy a "Profil gomb"-ban a
+Két bug kijavításán kezdtem el dolgozni. Az első mindössze annyi volt, hogy a \emph{Profil gomb}-ban a
 felhasználó nevének kezdőbetűi hard code-olva voltak, így ezt gyorsan kijavítottam.\\
 
 A második, a munkaidők, vagyis a túlórák számolását érintő hiba volt. Ez egy komplexebb bug volt.
