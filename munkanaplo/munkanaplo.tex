@@ -28,6 +28,9 @@
 % For \FloatBarrier
 \usepackage{placeins}
 
+\usepackage{cite} % optional, for number-style citations
+\usepackage{url}  % for formatting URLs properly
+
 % No numbering for sections (eg. Első Hét)
 \titleformat{\section}{\Large\bfseries}{}{0pt}{}{}
 
@@ -36,7 +39,7 @@
 \newcommand{\inltxt}[1]{\mintinline[breaklines, breakanywhere]{text}{#1}}
 
 % Code snippets label
-\renewcommand{\listingscaption}{Kód}
+\renewcommand{\listingscaption}{kód}
 
 \title{Szakmai Gyakorlat Munkanapló}
 \author{Bauer Brúnó Csaba}
@@ -69,14 +72,11 @@ szoftvercsomag segítségével történik, így ez lesz a forrása a belépteté
 \subsection{Active Directory, tech stack, szerver telepítés, tervezés megkezdése (09.05.)}
 
 Mivel az Active Directory, illetve az LDAP protokoll számomra ismeretlen technológiák, ezért először
-ezekkel kezdtem el ismerkedni. (Fontosabb források:
-\href{http://web.archive.org/web/20240315064825/http://ldapjs.org/guide.html}{LDAP.js Guide (Web Archive)}
-\href{https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol}{Lightweight Directory Access Protocol (Wikipedia)})\\
+ezekkel kezdtem el ismerkedni. (Fontosabb források: \cite{ldapjs, ldapWikipedia})\\
 
 Később rá is találtam egy JavaScript (TypeScript) könyvtárra \inlts{ldapts} néven
-(\href{https://github.com/ldapts/ldapts}{ldapts}), amely könyvtár alkalmas lesz az Active Directory szerverrel
-(továbbiakban: AD szerver) való kommunikálásra. Elkezdtem ismerkedni a libraryvel, sikerült vele az
-AD szerverhez kéréseket küldeni. A könyvtár – a webalkalmazás szempontjából - két legfontosabb
+(\href{https://github.com/ldapts/ldapts}{ldapts}), amely könyvtár alkalmas lesz az Active Directory szerverrel -- to\-váb\-bi\-ak\-ban \emph{AD szerver} -- való kommunikálásra. Elkezdtem ismerkedni a libraryvel, sikerült vele az
+AD szerverhez kéréseket küldeni. A könyvtár –- a webalkalmazás szempontjából -- két legfontosabb
 függvénye:
 
 \FloatBarrier
@@ -84,7 +84,7 @@ függvénye:
 bind(dnOrSaslMechanism, [password], [controls])
 \end{minted}
 
-A \inlts{bind} függvény egy bind operációt kezdeményez az AD szerver felé. Ezzel az operációval
+A \inlts{bind} függvény egy \emph{bind} operációt kezdeményez az AD szerver felé. Ezzel az operációval
 autentikálhatjuk magunkat az AD szerver felé. Sikeres bind után, az azt követő kérések már az adott
 felhasználó nevével történnek.
 
@@ -156,7 +156,7 @@ már az elején implementálom, hogy később – amennyiben szükség lesz rá 
 a nyelvi beállításokat.\\
 
 A felhasználói élmény növelése érdekében implementáltam a világos/sötét mód támogatást, így a
-felhasználók váltogathatnak a témák között. Végül létrehoztam az alkalmazás alapvető felépítését:
+felhasználók váltogathatnak a témák között. Végül lét\-re\-hoz\-tam az alkalmazás alapvető felépítését:
 tartalmaz egy fejlécet, egy fő tartalmi részt (body), és egy láblécet. (\ref{fig:dark_light_modes}.~ábra)\\
 
 \begin{figure}[ht]
@@ -184,8 +184,7 @@ Szükség volt egy dedikált Active Directory szerverre, hogy ne az éles szerve
 fejlesztéshez. Először egy Docker konténerre gondoltam, azonban mint kiderült, nincsen egy az
 eredetihez még csak hasonló megoldás sem, lévén az Active Directory egy Windows technológia. A
 megoldás egy Windows Server VM lett, aminek a telepítését dokumentáltam. Az Active Directory
-telepítéséhez nagy segítség volt ez a YouTube videó: \href{https://youtu.be/MHsI8hJmggI?si=t0c5f8Z-
-2RUdvrnV}{ How to Setup a Basic Home Lab Running Active Directory (Oracle VirtualBox) | Add Users w/PowerShell (YouTube)}.
+telepítéséhez nagy segítség volt \acite{madakorADLab} YouTube videó.
 
 \subsubsection*{Kód futtatása az alkalmazás indulásakor}
 Mivel a SvelteKit dokumentációjában nem találtam arra módszert, hogy hogyan kell futtatni kódot az
@@ -246,7 +245,8 @@ válaszként kapott felhasználó parseolásához a typebox library-t használom
 
 Mivel a projekt követelményei közé tartozott az is, hogy az alkalmazás az AD-ben szereplő jelszavak
 lejárati dátumait vegye figyelembe a session kezelésnél, így a pwdLastSet attribútumot is át kellett
-konvertáljam dátum objektummá, melyet \aref{listing:active_directory_utils}.~kódban látható függvénnyel oldottam meg.
+konvertáljam dátum objektummá, melyet \aref{listing:active_directory_utils}.~kódban látható függvénnyel
+oldottam meg \acite{pwdLastSet} segítségével.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/activeDirectoryUtils.ts}
@@ -265,7 +265,7 @@ unit teszteket tudjak írni szükséges egy ”mock” LDAP klienst létrehozni.
 \inlts{AbstractLdapClient} osztályt, amit majd extendelni fog az \inlts{LdapClient} és a \inlts{MockLdapClient}
 osztály. A \inlts{MockLdapClient} osztályra már nem volt időm a mai nap.
 
-\subsection{MockLdapClient, ActiveDirectoryService osztállyá alakítása, tesztek
+\subsection{MockLdapClient, ActiveDirectoryService osztállyá a\-la\-kí\-tá\-sa, tesztek
 írása (09.12.)}
 
 \subsubsection*{MockLdapClient}
@@ -804,7 +804,7 @@ implementálni (\ref{fig:sup_groups}.~ábra), amely egy táblázatot tartalmaz a
 
 \subsection{/admin/supervisement-groups/[id] oldal (BE) (10.25.)}
 
-Befejeztem a tegnap elkezdett \inltxt{/admin/supervisement-groups} oldal implementálását. \\
+Befejeztem a tegnap elkezdett \inltxt{/admin/supervisement-groups} oldal imp\-le\-men\-tá\-lás\-át. \\
 
 Ezt követően létrehoztam a \inltxt{SupervisementGroupMemberships} adatbázis sémat (\ref{fig:sup_schema}.~ábra), amely a
 dolgozók csoportokhoz rendelését valósítja meg.
@@ -970,7 +970,7 @@ dokumentáltam.
 A Kantech (Windows) szerver és az alkalmazás szervere közötti fájlszinkronizációt oldottam meg. Több
 lehetőség közül végül a unison nevű programra esett a választásom, amely ssh-n keresztül
 szinkronizálja a riport mappákat a két szerver között. A unison profile fájlok
-\aref{listing:unison_files}.~kódban láthatók.
+\aref{listing:unison_files}.~kódban láthatók. A használatához felhasznált forrást lásd \acite{unison} dokumentumban.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}{code/unison-files.prf}
@@ -1003,5 +1003,8 @@ megírására már nincs időm, a kódot refaktoráltam néhány helyen, így ja
 Az utolsó napon, a tegnap megkezdett kód refaktorálást fejeztem be. Ezt követően a projekt során
 felmerült ötleteket, kisebb bugokat GitHub issue-k formájában írtam le. Így, ha a későbbiekben más
 hallgatók érkeznek a céghez, akkor könnyen folytatni tudják a projektet.
+
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end{document}
