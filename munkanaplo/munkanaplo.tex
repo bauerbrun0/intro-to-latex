@@ -46,14 +46,9 @@
 
 % Title Page
 \maketitle
-\thispagestyle{empty}
-\newpage
 
 % Table of Contents
-\clearpage
 \tableofcontents
-\newpage
-\phantomsection
 
 \section{Első Hét}
 
@@ -239,7 +234,7 @@ a \inlts{getUserBysAMAccountName} függvények. Az \inlts{authenticateUser} füg
 jelszót vár paraméterként, inicializál egy új LDAP klienst, amellyel egy bind operációval autentikálja a
 felhasználót az AD szerver felé. \\
 
-A \inlts{getUserBysAMAccountName} függvény pedig egy felhasználónevet (sAMAccountName) vár
+A \inlts{getUserBysAMAccountName} függvény pedig egy felhasználónevet (\inlts{sAMAccountName}) vár
 paraméternek és egy search operációval megpróbálja megkeresni az AD szerveren a felhasználót. A
 válaszként kapott felhasználó parseolásához a typebox library-t használom (lásd \aref{listing:user_typebox}.~kódot).
 
