@@ -23,7 +23,14 @@
 \usepackage{xcolor}
 % Light gray background for code snippets
 \definecolor{codebg}{RGB}{240, 240, 240}
-\usepackage[colorlinks=true, linkcolor=black, filecolor=black, urlcolor=blue]{hyperref}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,      % Color for internal links (sections, equations)
+    citecolor=green,     % Color for citations
+    urlcolor=cyan        % Color for URLs
+}
 
 % Used to render code snippets
 \usepackage{minted}
