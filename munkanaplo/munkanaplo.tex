@@ -35,6 +35,9 @@
 \newcommand{\inlts}[1]{\mintinline[breaklines, breakanywhere]{typescript}{#1}}
 \newcommand{\inltxt}[1]{\mintinline[breaklines, breakanywhere]{text}{#1}}
 
+% Code snippets label
+\renewcommand{\listingscaption}{Kód}
+
 \title{Szakmai Gyakorlat Munkanapló}
 \author{Bauer Brúnó Csaba}
 \date{2024. 12. 30.}
@@ -204,23 +207,11 @@ Az Active Directory service-t kezdem el írni, vagyis azt a fájlt, amiben az AD
 kommunikációhoz szükséges függvények találhatók. Első körben egy \inlts{start} és egy \inlts{stop} függvényt
 implementáltam.
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
-// lib/services/activeDirectoryService.ts
-let ldapClient: LdapClient;
-let reconnecting = false;
-
-async function start(activeDirectoryConfig: LdapConfig) { ... }
-async function startReconnecting() { ... }
-async function stop() { ... }
-
-const activeDirectoryService: ActiveDirectoryService = {
-    start,
-    stop,
-};
-
-export default activeDirectoryService;
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/activeDirectoryService.ts}
+\caption{Active Directory service}
+\label{listing:3}
+\end{listing}
 
 A \inlts{start} függvény lényegében egy LDAP klienst inicializál, majd pedig egy bind operációt hajt végre az
 AD szerveren, az alkalmazás számára létrehozott admin felhasználó DN és jelszó párosával.\\
@@ -252,48 +243,21 @@ A \inlts{getUserBysAMAccountName} függvény pedig egy felhasználónevet (sAMAc
 paraméternek és egy search operációval megpróbálja megkeresni az AD szerveren a felhasználót. A
 válaszként kapott felhasználó parseolásához a typebox library-t használom:
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
-// lib/types/user.ts
-import { Type } from "@sinclair/typebox";
-import type { Static } from "@sinclair/typebox";
-
-export const activeDirectoryUserSchema = Type.Object({
-    employeeID: Type.String(),
-    distinguishedName: Type.String(),
-    sAMAccountName: Type.String(),
-    employeeNumber: Type.String(),
-    memberOf: Type.Union([Type.String(), Type.Array(Type.String())], {
-        default: "",
-    }),
-    sn: Type.String(),
-    givenName: Type.String(),
-    displayName: Type.String(),
-    pwdLastSet: Type.String(),
-});
-
-export type ActiveDirectoryUser = Static<typeof activeDirectoryUserSchema>;
-export const activeDirectoryUserValidator: Validator<ActiveDirectoryUser> =
-    createValidator<ActiveDirectoryUser>(activeDirectoryUserSchema);
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/user.ts}
+\caption{user.ts fájl - typebx library használata}
+\label{listing:4}
+\end{listing}
 
 Mivel a projekt követelményei közé tartozott az is, hogy az alkalmazás az AD-ben szereplő jelszavak
 lejárati dátumait vegye figyelembe a session kezelésnél, így a pwdLastSet attribútumot is át kellett
 konvertáljam dátum objektummá, melyet az alábbi függvénnyel oldottam meg:
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
-// lib/utils/activeDirectoryUtils.ts
-export function parseActiveDirectoryDate(activeDirectoryDate: string): Date {
-	const truncatedPwdLastSet = activeDirectoryDate.substring(
-		0,
-		activeDirectoryDate.length - 4,
-	);
-
-	const windowsEpoch = Date.UTC(1601, 0, 1);
-	return new Date(windowsEpoch + Number.parseInt(truncatedPwdLastSet));
-}
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/activeDirectoryUtils.ts}
+\caption{parseActiveDirectoryDate függvény}
+\label{listing:5}
+\end{listing}
 
 \subsubsection*{Tesztelés előkészítése}
 A tesztelés nem szerepelt a projektkövetelmények között, valamint idő szűkében nem is tudnék 100\%-
@@ -320,87 +284,21 @@ futnak le, illetve dobnak hibákat.
 Annak érdekében, hogy az AD service-t megfelelően lehessen tesztelni, (”singleton”) osztállyá
 alakítottam át azt, így minden tesztet külön példánnyal lehet végrehajtani.
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
-// lib/services/ActiveDirectoryService.ts
-class ActiveDirectoryService {
-    protected static _instance: ActiveDirectoryService | undefined = undefined;
-    static initialize(
-        ldapClient: AbstractLdapClient,
-        activeDirectoryConfig: ActiveDirectoryConfig,
-    ) {
-        if (!ActiveDirectoryService._instance) {
-            ActiveDirectoryService._instance = new ActiveDirectoryService(
-                ldapClient,
-                activeDirectoryConfig,
-            );
-        }
-        return ActiveDirectoryService._instance;
-    }
-
-    static get instance(): ActiveDirectoryService {
-        if (!ActiveDirectoryService._instance) {
-            throw new Error(...);
-        }
-        return ActiveDirectoryService._instance;
-    }
-
-    private ldapClient: AbstractLdapClient;
-
-    ...
-
-    protected constructor(
-        ldapClient: AbstractLdapClient,
-        activeDirectoryConfig: ActiveDirectoryConfig,
-    ) {
-        this.ldapClient = ldapClient;
-        this.activeDirectoryConfig = activeDirectoryConfig;
-    }
-
-    async start() { ... }
-    async authenticateUser(bindDN: string, password: string): Promise<boolean> { ... }
-    async getUserBysAMAccountName(sAMAccountName: string): Promise<User> { ... }
-    ...
-}
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/activeDirectoryServiceSingleton.ts}
+\caption{activeDirectoryService - singleton osztállyá alakítás}
+\label{listing:6}
+\end{listing}
 
 \subsubsection*{Tesztek írása}
 
 Ezt követően a következő AD service unit teszteket írtam meg:
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}
-// pnpm run test:unit
-src/lib/services/ActiveDirectoryService.test.ts (20)
-    ActiveDirectoryService Singleton Tests (2)
-        should initialize and return the same instance
-        should reset the singleton between tests
-    start() (5)
-        should succeed with correct admin dn and password
-        should succeed if service can reconnect after a connection error
-        should throw LdapConnectionError if a connection error occures
-        should throw UnknownLdapError if an unknown error occures
-        should throw LdapAuthenticationError with incorrect admin credentials
-    getUserBysAMAccountName() (9)
-        should succeed with correct sAMAccountName
-        should succeed if user is in multiple groups
-        should return user with isAdmin set to true, if user is a member of the
-            Admins group
-        should throw UserNotFoundError if the user does not exist
-        should throw MultipleUsersFoundError when multiple users are found
-        should throw an InternalError if one or more active directory attributes are
-            missing/incorrect
-        should throw an InternalError if the ActiveDirectoryUser cannot be converted
-            to a User
-        should throw an InternalError if an unknown error occures
-        should throw an InternalError if a connection error occures
-    authenticateUser (4)
-        should return true with correct credentials
-        should return false with incorrect credentials
-        should throw an InternalError if a connection error occures
-        should throw an InternalError if an unknown error occures
-
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}{code/activeDirectoryServiceTests.txt}
+\caption{ActiveDirectoryService unit tesztek}
+\label{listing:7}
+\end{listing}
 
 \subsection{Header komponens, Login oldal (frontend) (09.13.)}
 
@@ -462,35 +360,11 @@ header formájában kapott session token-t ellenőrzi. \\
 
 A következő függvényeket implementáltam a \inltxt{lib/auth/session.ts} modulban:
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
-// lib/auth/session.ts
-export function generateSessionToken(): string {}
-
-export async function createSession(
-    token: string,
-   userEmployeeId: string,
-   userPasswordLastSet: Date,
-   passwordChangeIntervalInMinutes: number,
-): Promise<Session> {}
-export async function validateSessionToken(
-    token: string,
-): Promise<SessionValidationResult> {}
-
-export async function invalidateSession(sessionId: string): Promise<void> {}
-
-export type SessionValidationResult =
-    | { session: Session; user: User }
-    | { session: null; user: null };
-
-export function setSessionTokenCookie(
-    event: RequestEvent,
-    token: string,
-    expiresAt: Date,
-): void {}
-
-export function deleteSessionTokenCookie(event: RequestEvent): void {}
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/session.ts}
+\caption{session.ts fájl függvények}
+\label{listing:8}
+\end{listing}
 
 A \inlts{createSession()} függvény egy Postgres adatbázis sessions táblájába tárolja el a
 létrehozott sessionöket. A létrehozáskor a session lejárati dátumát – a követelményeknek
@@ -592,97 +466,22 @@ alkalmazott milyen beosztásban dolgozik: termelési, illetve irodai nézet. A k
 adatokra van szükség. A timesheet oldal betöltésekor az alkalmazás két dátum közötti \inlts{cardUsage}
 rekordokat lekérdezi, majd átalakítja az alábbi két típus valamelyikébe.
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
-// lib/types/shiftViewData.ts
-export type ProductionShiftViewData = {
-    shifts: {
-        startDay: Date;
-        endDay: Date;
-        firstProductionEntry: Date;
-        lastProductionExit: Date;
-        totalWorkedTimeMs: number;
-        totalInFactoryTimeMs: number;
-        totalInProductionTimeMs: number;
-        overtimeMs: number;
-        inFactoryIntervals: {
-            startDate: Date;
-            endDate: Date;
-            timeInFactoryMs: number;
-            totalProductionTimeMs: number;
-            inProductionIntervals: {
-                startDate: Date;
-                endDate: Date;
-                timeInProductionMs: number;
-            }[];
-        }[];
-    }[];
-    numberOfShifts: number;
-    totalTimeWorkedMs: number;
-    averageTimeWorkedMs: number;
-    totalTimeInFactoryMs: number;
-    averageTimeInFactoryMs: number;
-    totalTimeInProductionMs: number;
-    averageTimeInProductionMs: number;
-    totalOvertimeMs: number;
-    cardUsageAnomalies: {
-        cardUsageIndex: number;
-        error: string;
-    }[];
-};
-
-export type OfficeShiftViewData = {
-    shifts: {
-        day: Date;
-        firstFactoryEntry: Date;
-        lastFactoryExit: Date;
-        timeWorkedMs: number;
-        overtimeMs: number;
-    }[];
-    numberOfShifts: number;
-    totalTimeWorkedMs: number;
-    averageTimeWorkedMs: number;
-    mostTimeWorkedMs: number;
-    leastTimeWorkedMs: number;
-    totalOvertimeMs: number;
-};
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/shiftViewData.ts}
+\caption{termelési és irodai nézetek sémái}
+\label{listing:9}
+\end{listing}
 
 A tervezés után el is elkezdtem implementálni ezt a működést. Az átalakítást két részre bontva, a
 rekordokat először \inlts{Production/OfficeShiftVewDataIntervalDates} típusba alakítom.
 Ezekben a típusokban csak a kezdő és záró dátumok találhatók. A későbbi, számított attribútumokat
 két másik függvényben számolom ki.
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
-// lib/types/shiftViewData.ts
-export type ProductionShiftViewDataIntervalDates = {
-    shifts: {
-        startDay: Date;
-        endDay: Date;
-        inFactoryIntervals: {
-            startDate: Date;
-            endDate: Date;
-            inProductionIntervals: {
-                startDate: Date;
-                endDate: Date;
-            }[];
-        }[];
-    }[];
-    cardUsageAnomalies: {
-        cardUsageIndex: number;
-        error: string;
-    }[];
-};
-
-export type OfficeShiftViewDataIntervalDates = {
-    shifts: {
-        day: Date;
-        firstFactoryEntry: Date;
-        lastFactoryExit: Date;
-    }[];
-};
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/shiftViewDataIntervalDates.ts}
+\caption{Production/OfficeShiftVewDataIntervalDates típusok}
+\label{listing:10}
+\end{listing}
 
 \subsection{Kártyahasználati adatok átalakítása a munkaidő kimutatás oldal\\ betöltésekor (2) (09.20.)}
 
@@ -887,21 +686,11 @@ A következő adminisztrátori funkció, a kártyahasználati adatok menedzselé
 lépésként implementáltam a cardUsage service \inltxt{getPaginatedCardUsages()} függvényét, a
 következő paraméterekkel:
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}
-export type CardUsageSearchParams = {
-    pageNumber: number;
-    pageSize: number;
-    orderBy?: "id" | "userEmployeeId" | "gate" | "eventType" | "date";
-    order?: "asc" | "desc";
-    id?: string;
-    userEmployeeId?: string;
-    gate?: "Main" | "Production";
-    eventType?: "Entry" | "Exit";
-    startDate?: Date;
-    endDate?: Date;
-};
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/cardUsageSearchParams.ts}
+\caption{getPaginatedCardUsages() paraméterei}
+\label{listing:11}
+\end{listing}
 
 Ezt követően elkészítettem a \inltxt{/api/admin/card-usages/search} végpontot és a hozzá tartozó
 \inltxt{apiClient.searchPaginatedCardUsages} függvényt.
@@ -1189,32 +978,11 @@ szinkronizálja a riport mappákat a két szerver között. \\
 
 Unison fájlok:
 
-\FloatBarrier
-\begin{minted}[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}
-# daily-report-sync.prf
-
-root = C:\Users\Kantech-PC\Documents\EntraPass\Daily
-root = ssh://reportuser@<host>//srv/reports/daily
-
-sshargs = -i C:\\Users\\Kantech-PC\\.ssh\\id_ed25519
-repeat = watch
-auto = true
-batch = true
-confirmbigdel = false
-confirmmerge = false
-
-# emergency-report-sync.prf
-
-root = C:\Users\Kantech-PC\Documents\EntraPass\Emergency
-root = ssh://reportuser@<host>//srv/reports/emergency
-
-sshargs = -i C:\\Users\\Kantech-PC\\.ssh\\id_ed25519
-repeat = watch
-auto = true
-batch = true
-confirmbigdel = false
-confirmmerge = false
-\end{minted}
+\begin{listing}[!ht]
+\inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}{code/unison-files.prf}
+\caption{unison fájlok}
+\label{listing:12}
+\end{listing}
 
 Az a probléma lépett fel, hogy a unison ideiglenes (temp) fájlokkal dolgozik, így az alkalmazás azokat
 a fájlokat is megpróbálta beolvasni. Egy reguláris kifejezéssel ki tudtam szűrni ezeket a fájlokat.\\

@@ -1,0 +1,29 @@
+// pnpm run test:unit
+src/lib/services/ActiveDirectoryService.test.ts (20)
+    ActiveDirectoryService Singleton Tests (2)
+        should initialize and return the same instance
+        should reset the singleton between tests
+    start() (5)
+        should succeed with correct admin dn and password
+        should succeed if service can reconnect after a connection error
+        should throw LdapConnectionError if a connection error occures
+        should throw UnknownLdapError if an unknown error occures
+        should throw LdapAuthenticationError with incorrect admin credentials
+    getUserBysAMAccountName() (9)
+        should succeed with correct sAMAccountName
+        should succeed if user is in multiple groups
+        should return user with isAdmin set to true, if user is a member of the
+            Admins group
+        should throw UserNotFoundError if the user does not exist
+        should throw MultipleUsersFoundError when multiple users are found
+        should throw an InternalError if one or more active directory attributes are
+            missing/incorrect
+        should throw an InternalError if the ActiveDirectoryUser cannot be converted
+            to a User
+        should throw an InternalError if an unknown error occures
+        should throw an InternalError if a connection error occures
+    authenticateUser (4)
+        should return true with correct credentials
+        should return false with incorrect credentials
+        should throw an InternalError if a connection error occures
+        should throw an InternalError if an unknown error occures

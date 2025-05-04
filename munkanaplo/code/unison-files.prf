@@ -1,0 +1,23 @@
+# daily-report-sync.prf
+
+root = C:\Users\Kantech-PC\Documents\EntraPass\Daily
+root = ssh://reportuser@<host>//srv/reports/daily
+
+sshargs = -i C:\\Users\\Kantech-PC\\.ssh\\id_ed25519
+repeat = watch
+auto = true
+batch = true
+confirmbigdel = false
+confirmmerge = false
+
+# emergency-report-sync.prf
+
+root = C:\Users\Kantech-PC\Documents\EntraPass\Emergency
+root = ssh://reportuser@<host>//srv/reports/emergency
+
+sshargs = -i C:\\Users\\Kantech-PC\\.ssh\\id_ed25519
+repeat = watch
+auto = true
+batch = true
+confirmbigdel = false
+confirmmerge = false
