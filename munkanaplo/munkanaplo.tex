@@ -203,14 +203,14 @@ el kéréseket küld a szervernek addig, ameddig az nem válaszol.
 
 \subsection{Active Directory service, logolás (09.08.)}
 
-Az Active Directory service-t kezdem el írni, vagyis azt a fájlt, amiben az AD szerverrel való
+Az Active Directory service-t kezdem el írni (\ref{listing:active_directory_service}.~kód), vagyis azt a fájlt, amiben az AD szerverrel való
 kommunikációhoz szükséges függvények találhatók. Első körben egy \inlts{start} és egy \inlts{stop} függvényt
 implementáltam.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/activeDirectoryService.ts}
 \caption{Active Directory service}
-\label{listing:3}
+\label{listing:active_directory_service}
 \end{listing}
 
 A \inlts{start} függvény lényegében egy LDAP klienst inicializál, majd pedig egy bind operációt hajt végre az
@@ -241,22 +241,22 @@ felhasználót az AD szerver felé. \\
 
 A \inlts{getUserBysAMAccountName} függvény pedig egy felhasználónevet (sAMAccountName) vár
 paraméternek és egy search operációval megpróbálja megkeresni az AD szerveren a felhasználót. A
-válaszként kapott felhasználó parseolásához a typebox library-t használom:
+válaszként kapott felhasználó parseolásához a typebox library-t használom (lásd \aref{listing:user_typebox}.~kódot).
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/user.ts}
-\caption{user.ts fájl - typebx library használata}
-\label{listing:4}
+\caption{user.ts fájl - typebox library használata}
+\label{listing:user_typebox}
 \end{listing}
 
 Mivel a projekt követelményei közé tartozott az is, hogy az alkalmazás az AD-ben szereplő jelszavak
 lejárati dátumait vegye figyelembe a session kezelésnél, így a pwdLastSet attribútumot is át kellett
-konvertáljam dátum objektummá, melyet az alábbi függvénnyel oldottam meg:
+konvertáljam dátum objektummá, melyet \aref{listing:active_directory_utils}.~kódban látható függvénnyel oldottam meg.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/activeDirectoryUtils.ts}
 \caption{parseActiveDirectoryDate függvény}
-\label{listing:5}
+\label{listing:active_directory_utils}
 \end{listing}
 
 \subsubsection*{Tesztelés előkészítése}
@@ -282,22 +282,22 @@ futnak le, illetve dobnak hibákat.
 \subsubsection*{ActiveDirectoryService osztállyá alakítása}
 
 Annak érdekében, hogy az AD service-t megfelelően lehessen tesztelni, (”singleton”) osztállyá
-alakítottam át azt, így minden tesztet külön példánnyal lehet végrehajtani.
+alakítottam át azt (lásd \aref{listing:active_directory_service_singleton}.~kódot), így minden tesztet külön példánnyal lehet végrehajtani.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/activeDirectoryServiceSingleton.ts}
 \caption{activeDirectoryService - singleton osztállyá alakítás}
-\label{listing:6}
+\label{listing:active_directory_service_singleton}
 \end{listing}
 
 \subsubsection*{Tesztek írása}
 
-Ezt követően a következő AD service unit teszteket írtam meg:
+Ezt követően a következő AD service unit teszteket írtam meg. Outputjuk \aref{listing:active_directory_service_tests}.~kódban látható.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}{code/activeDirectoryServiceTests.txt}
 \caption{ActiveDirectoryService unit tesztek}
-\label{listing:7}
+\label{listing:active_directory_service_tests}
 \end{listing}
 
 \subsection{Header komponens, Login oldal (frontend) (09.13.)}
@@ -358,12 +358,12 @@ A bejelentkezés backend részét implementáltam (\ref{fig:login}.~ábra), vala
 kérés előtt lefutó (\inlts{hooks.server.ts}) – session validációt, amely a böngészőtől cookie
 header formájában kapott session token-t ellenőrzi. \\
 
-A következő függvényeket implementáltam a \inltxt{lib/auth/session.ts} modulban:
+\Aref{listing:session}.~kódban látható függvényeket implementáltam a \inltxt{lib/auth/session.ts} modulban.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/session.ts}
 \caption{session.ts fájl függvények}
-\label{listing:8}
+\label{listing:session}
 \end{listing}
 
 A \inlts{createSession()} függvény egy Postgres adatbázis sessions táblájába tárolja el a
@@ -464,23 +464,23 @@ tárolják azokat.
 Egyeztetések alapján, a munkaidő kimutatás (timesheet) oldalnak két nézete lehet az alapján, hogy az
 alkalmazott milyen beosztásban dolgozik: termelési, illetve irodai nézet. A két nézethez különböző
 adatokra van szükség. A timesheet oldal betöltésekor az alkalmazás két dátum közötti \inlts{cardUsage}
-rekordokat lekérdezi, majd átalakítja az alábbi két típus valamelyikébe.
+rekordokat lekérdezi, majd átalakítja \aref{listing:shift_view_data}.~kódban található két típus valamelyikébe.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/shiftViewData.ts}
-\caption{termelési és irodai nézetek sémái}
-\label{listing:9}
+\caption{Termelési és irodai nézetek sémái}
+\label{listing:shift_view_data}
 \end{listing}
 
 A tervezés után el is elkezdtem implementálni ezt a működést. Az átalakítást két részre bontva, a
-rekordokat először \inlts{Production/OfficeShiftVewDataIntervalDates} típusba alakítom.
-Ezekben a típusokban csak a kezdő és záró dátumok találhatók. A későbbi, számított attribútumokat
-két másik függvényben számolom ki.
+rekordokat először \inlts{Production/OfficeShiftVewDataIntervalDates} típusba alakítom (lásd
+\aref{listing:shift_view_data_interval_dates}.~kódot). Ezekben a típusokban csak a kezdő és záró dátumok
+találhatók. A későbbi, számított attribútumokat két másik függvényben számolom ki.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/shiftViewDataIntervalDates.ts}
 \caption{Production/OfficeShiftVewDataIntervalDates típusok}
-\label{listing:10}
+\label{listing:shift_view_data_interval_dates}
 \end{listing}
 
 \subsection{Kártyahasználati adatok átalakítása a munkaidő kimutatás oldal\\ betöltésekor (2) (09.20.)}
@@ -683,13 +683,13 @@ adatbázisából távolítja el a kapcsolódó adatokat.
 \subsection{Kártyahasználati adatok keresése (backend) (10.18.)}
 
 A következő adminisztrátori funkció, a kártyahasználati adatok menedzselése került sorra. Első
-lépésként implementáltam a cardUsage service \inltxt{getPaginatedCardUsages()} függvényét, a
-következő paraméterekkel:
+lépésként implementáltam a cardUsage service \inltxt{getPaginatedCardUsages()} függvényét,
+\aref{listing:card_usage_search_params}.~kódban látható paraméterekkel.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{typescript}{code/cardUsageSearchParams.ts}
 \caption{getPaginatedCardUsages() paraméterei}
-\label{listing:11}
+\label{listing:card_usage_search_params}
 \end{listing}
 
 Ezt követően elkészítettem a \inltxt{/api/admin/card-usages/search} végpontot és a hozzá tartozó
@@ -974,14 +974,13 @@ dokumentáltam.
 
 A Kantech (Windows) szerver és az alkalmazás szervere közötti fájlszinkronizációt oldottam meg. Több
 lehetőség közül végül a unison nevű programra esett a választásom, amely ssh-n keresztül
-szinkronizálja a riport mappákat a két szerver között. \\
-
-Unison fájlok:
+szinkronizálja a riport mappákat a két szerver között. A unison profile fájlok
+\aref{listing:unison_files}.~kódban láthatók.
 
 \begin{listing}[!ht]
 \inputminted[bgcolor=codebg, breaklines, breakanywhere, fontsize=\small]{text}{code/unison-files.prf}
 \caption{unison fájlok}
-\label{listing:12}
+\label{listing:unison_files}
 \end{listing}
 
 Az a probléma lépett fel, hogy a unison ideiglenes (temp) fájlokkal dolgozik, így az alkalmazás azokat
